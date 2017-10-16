@@ -1,4 +1,5 @@
-var http = require('http');
+//var http = require('http');
+var https = require('https');
 var fs = require('fs');
 var io = require('socket.io');
 var mysql = require('mysql');
@@ -8,7 +9,10 @@ const listLamp = ["Cuisine", "Salle à Manger", "Chambre"];
 var state = [true, false, true];
 
 // Chargement du fichier index.html affiché au client
-var server = http.createServer(function (req, res) {
+var server = https.createServer({
+    key: fs.readFileSync('encryption/key.pem'),
+    cert: fs.readFileSync('encryption/cert.pem')
+}, function (req, res) {
     fs.readFile('./test.html', 'utf-8', function (error, content) {
         res.writeHead(200, { "Content-Type": "text/html" });
         res.end(content);
@@ -46,14 +50,14 @@ WSServer.sockets.on('connection', function (socket) {
         socket.emit("lampStateChanged", { location: msg.location, state: state[stateIndex], brightness: 50 });
     });
 
-    socket.on("login", msg =>{
-        
+    socket.on("login", msg => {
+
         /*
             Recherche et vérification dans la base de données pour l'authentification
         */
 
         //Envoi d'un message template indicant un succès de connexion
-        socket.emit("loginResult", {success: true});
+        socket.emit("loginResult", { success: true });
         //socket.emit("loginResult", {success: false});
 
     });
@@ -66,7 +70,7 @@ WSServer.sockets.on('connection', function (socket) {
         En cas de défaillance du module zigbee sur la Raspberry
         socket.emit("zigbeeFail", {error: "Erreur : Le module Zigbee de la Raspberry est défaillant});
     */
-    
+
 
 });
 
