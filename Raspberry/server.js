@@ -78,3 +78,5 @@ WSServer.sockets.on('connection', function (socket) {
 
 
 server.listen(8080);
+
+console.log("Serveur démarré, pour vous connecter à celui-ci, dans un navigateur Web, entrez l'adresse https://localhost:8080");
