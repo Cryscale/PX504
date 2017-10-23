@@ -11,30 +11,32 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        var socket = io.connect('https://192.168.1.12:8080');
-        socket.on("listLamp", msg => {
-            var listLamp = msg.list;
-            var state = msg.state;
-            for (var i = 0; i < listLamp.length; i++) {
-                if (state[i]) {
-                    console.log(listLamp[i] + " : Allumé");
+        var socket = io.connect('http://192.168.1.12:8080');
+        socket.on("listLamp", msg1 => {
+            
+            msg = msg1.list;
+            for (var i = 0; i < msg.length; i++) {
+                if (msg[i].state == "on") {
+                    console.log(msg[i].location + " : Allumé");
                 } else {
-                    console.log(listLamp[i] + " : Eteinte");
+                    console.log(msg[i].location  + " : Eteinte");
                 }
             }
         });
 
         socket.on("lampStateChanged", msg => {
 
-            if (msg.state) {
-                console.log("Etat changé : " + msg.location + " : Allumé");
+            if(msg.state == "on") {
+                console.log("Etat changé : "+ msg.location + " Allumé");
             } else {
-                console.log("Etat changé : " + msg.location + " : Eteinte");
+                console.log("Etat changé : "+ msg.location + " Eteint");
             }
+            
 
         })
-        socket.emit("getListLamp", { user: "Valentin" });
-        socket.emit("changeLampState", { location: "Cuisine", state: true, brigtness: 50 });
+        socket.emit("getListLamp", { user: "valentin" });
+        socket.emit("changeLampState", { location: "salon", state: "off", brightness: 50 });
+        socket.emit("login", { user: "valentin", password: "1111"});
     </script>
 </body>
 
