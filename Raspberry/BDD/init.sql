@@ -1,0 +1,33 @@
+DROP DATABASE IF EXISTS smart_remote;
+
+CREATE DATABASE smart_remote;
+
+USE smart_remote;
+
+CREATE TABLE Lampes (
+  id  TINYINT PRIMARY KEY AUTO_INCREMENT,
+  location VARCHAR(40) NOT NULL,
+  brightness TINYINT NOT NULL
+);
+
+CREATE TABLE Utilisateurs (
+  id  TINYINT PRIMARY KEY AUTO_INCREMENT,
+  nom VARCHAR(40) NOT NULL,
+  prenom VARCHAR(40) NOT NULL,
+  mdp VARCHAR(40) NOT NULL,
+  code CHAR(4)
+);
+
+LOAD DATA LOCAL INFILE 'donnees_lampe.csv'
+INTO TABLE Lampes
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(location,brightness);
+
+LOAD DATA LOCAL INFILE 'donnees_utilisateurs.csv'
+INTO TABLE Utilisateurs
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(nom,prenom,mdp,code);
