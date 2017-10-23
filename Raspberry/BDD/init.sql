@@ -6,15 +6,19 @@ USE smart_remote;
 
 CREATE TABLE Lampes (
   id  TINYINT PRIMARY KEY AUTO_INCREMENT,
+  user VARCHAR(2)
+  etat VARCHAR(3) NOT NULL,
   location VARCHAR(40) NOT NULL,
-  brightness TINYINT NOT NULL
+  brightness TINYINT NOT NULL,
+  CONSTRAINT fk_client_id
+  	FOREIGN KEY ()
 );
 
 CREATE TABLE Utilisateurs (
-  id  TINYINT PRIMARY KEY AUTO_INCREMENT,
+  surname  VARCHAR(40) PRIMARY KEY,
   nom VARCHAR(40) NOT NULL,
   prenom VARCHAR(40) NOT NULL,
-  mdp VARCHAR(40) NOT NULL,
+  mdp VARCHAR(256) NOT NULL,
   code CHAR(4)
 );
 
