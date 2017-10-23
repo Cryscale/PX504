@@ -1,4 +1,4 @@
-location;brightness
-salon;100
-cuisine;0
-chambre;50
+state;location;brightness
+on;salon;100
+off;cuisine;0
+on;chambre;50

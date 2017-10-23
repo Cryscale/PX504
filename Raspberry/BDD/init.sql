@@ -4,34 +4,46 @@ CREATE DATABASE smart_remote;
 
 USE smart_remote;
 
-CREATE TABLE Lampes (
+CREATE TABLE Lamp (
   id  TINYINT PRIMARY KEY AUTO_INCREMENT,
-  user VARCHAR(2)
-  etat VARCHAR(3) NOT NULL,
+  state VARCHAR(3) NOT NULL,
   location VARCHAR(40) NOT NULL,
-  brightness TINYINT NOT NULL,
-  CONSTRAINT fk_client_id
-  	FOREIGN KEY ()
+  brightness TINYINT NOT NULL
 );
 
-CREATE TABLE Utilisateurs (
-  surname  VARCHAR(40) PRIMARY KEY,
-  nom VARCHAR(40) NOT NULL,
-  prenom VARCHAR(40) NOT NULL,
-  mdp VARCHAR(256) NOT NULL,
-  code CHAR(4)
+CREATE TABLE User (
+  username  VARCHAR(40) PRIMARY KEY,
+  lastname VARCHAR(40) NOT NULL,
+  firstname VARCHAR(40) NOT NULL,
+  password VARCHAR(256) NOT NULL
+);
+
+CREATE TABLE Control (
+  username VARCHAR(40) NOT NULL,
+  id TINYINT NOT NULL,
+  CONSTRAINT pk_Control PRIMARY KEY (username, id),
+  CONSTRAINT FOREIGN KEY (username) REFERENCES User(username),
+  CONSTRAINT FOREIGN KEY (id) REFERENCES Lamp(id)
+
 );
 
 LOAD DATA LOCAL INFILE 'donnees_lampe.csv'
-INTO TABLE Lampes
+INTO TABLE Lamp
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(location,brightness);
+(state,location,brightness);
 
 LOAD DATA LOCAL INFILE 'donnees_utilisateurs.csv'
-INTO TABLE Utilisateurs
+INTO TABLE User
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
-(nom,prenom,mdp,code);
+(username,lastname,firstname,password);
+
+LOAD DATA LOCAL INFILE 'donnees_control.csv'
+INTO TABLE Control
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\n'
+IGNORE 1 LINES
+(username, id);

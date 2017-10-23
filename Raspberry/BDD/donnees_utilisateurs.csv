@@ -1,5 +1,5 @@
-nom;prenom;mdp;code
-loulichki;samy;maroc;1111
-peiro;alexia;France;2222
-bizeray;valentin;allemagne;3333
-landon;arthur;Italie;4444
+username;lastname;firstname;password
+samy;loulichki;samy;1111
+alexia;peiro;alexia;2222
+valentin;bizeray;valentin;3333
+arthur;landon;arthur;4444
