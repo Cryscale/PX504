@@ -52,8 +52,6 @@ WSServer.sockets.on('connection', function (socket) {
     //Réaction à la requête de changement d'état d'une lampe
     socket.on("changeLampState", msg => {
 
-
-
         mysqlClient.query(
             "UPDATE Lamp SET State = ?, brightness = ? WHERE location = ?",
             [msg.state, msg.brightness, msg.location],
