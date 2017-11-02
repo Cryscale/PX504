@@ -44,6 +44,8 @@ WSServer.sockets.on('connection', function (socket) {
 
     socket.on("getListLamp", msg => {
 
+        console.log('Demande liste de lampe par '+msg.user);
+
         mysqlClient.query("SELECT * FROM Lamp INNER JOIN Control ON Lamp.id = Control.id WHERE Control.username = ?", [msg.user], (error, result) => {
             socket.emit('listLamp', { list: result });
         });
@@ -51,6 +53,8 @@ WSServer.sockets.on('connection', function (socket) {
 
     //Réaction à la requête de changement d'état d'une lampe
     socket.on("changeLampState", msg => {
+
+        console.log('Requète de changement');
 
         mysqlClient.query(
             "UPDATE Lamp SET State = ?, brightness = ? WHERE location = ?",
@@ -67,6 +71,8 @@ WSServer.sockets.on('connection', function (socket) {
     });
 
     socket.on("login", msg => {
+
+        console.log('Identification');
 
         //Recherche et vérification dans la base de données pour l'authentification
 
