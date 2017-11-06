@@ -3,10 +3,6 @@ var fs = require('fs');
 var io = require('socket.io');
 var mysql = require('mysql');
 
-//Variables de test avant la mise en place de la base de données
-const listLamp = ["Cuisine", "Salle à Manger", "Chambre"];
-var state = [true, false, true];
-
 
 var mysqlClient = mysql.createConnection({
     host: 'localhost',
@@ -47,12 +43,12 @@ WSServer.sockets.on('connection', function (socket) {
         console.log('Demande liste de lampe par '+msg.user);
 
         mysqlClient.query("SELECT * FROM Lamp INNER JOIN Control ON Lamp.id = Control.id WHERE Control.username = ?", [msg.user], (error, result) => {
-            socket.emit('listLamp', { list: result });
+            socket.emit('getListLampResult', { list: result });
         });
     });
 
     //Réaction à la requête de changement d'état d'une lampe
-    socket.on("changeLampState", msg => {
+    socket.on("setLamp", msg => {
 
         console.log('Requète de changement');
 
@@ -63,8 +59,8 @@ WSServer.sockets.on('connection', function (socket) {
                 if (error != null) {
                     console.log(error);
                 } else {
-                    socket.broadcast.emit("lampStateChanged", { location: msg.location, state: msg.state, brightness: msg.brightness });
-                    socket.emit("lampStateChanged", { location: msg.location, state: msg.state, brightness: msg.brightness });
+                    socket.broadcast.emit("setLampResult", { location: msg.location, state: msg.state, brightness: msg.brightness });
+                    socket.emit("setLampResult", { location: msg.location, state: msg.state, brightness: msg.brightness });
                 }
             });
 
