@@ -65,7 +65,7 @@ public class WebSocketClient {
             }
         });
 
-        this.socket.on("listLamp", new Emitter.Listener() {
+        this.socket.on("getListLampResult", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
 
@@ -87,7 +87,7 @@ public class WebSocketClient {
             }
         });
 
-        this.socket.on("lampStateChanged", new Emitter.Listener() {
+        this.socket.on("setLampResult", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 Message msg = webSocketHandler.obtainMessage();
