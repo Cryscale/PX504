@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/my_toolbar"
+    android:layout_width="match_parent"
+    android:minHeight="?attr/actionBarSize"
+    android:layout_height="?attr/actionBarSize"
+    android:background="?attr/colorPrimary"
+    android:elevation="4dp"
+    android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+    <ImageButton
+        android:id="@+id/menuButton"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:background="#FFFFFF"
+        android:clickable="true"
+        android:cropToPadding="false"
+        android:scaleType="fitXY"
+        android:src="@drawable/menu"/>
+
+    <TextView
+        android:id="@+id/titreTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Test"
+        android:gravity="center"
+        android:textSize="20dp"/>
+
+</android.support.v7.widget.Toolbar>
