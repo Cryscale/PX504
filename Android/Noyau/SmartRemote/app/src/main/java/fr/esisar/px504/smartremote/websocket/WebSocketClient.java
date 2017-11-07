@@ -28,7 +28,7 @@ public class WebSocketClient {
     public static final int STATE_CHANGED = 2;
     public static final int LOGIN_RESULT = 3;
     public static final int ERROR = 4;
-    public static final String WS_SERVER = "http://192.168.0.30:8080";
+    public static final String WS_SERVER = "http://192.168.20.1:8080";
     final private WebSocketHandler webSocketHandler;
 
     /**
@@ -154,7 +154,7 @@ public class WebSocketClient {
             msg.put("location", lamp.getLocation());
             msg.put("state", lamp.getState());
             msg.put("brightness", lamp.getbrightness());
-            socket.emit("changeLampState", msg);
+            socket.emit("setLamp", msg);
         } catch (JSONException e) {
             e.printStackTrace();
         }
