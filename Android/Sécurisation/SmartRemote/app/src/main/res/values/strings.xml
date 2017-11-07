@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Smart Remote</string>
+    <string name="app_name">Secure Test</string>
     <string name="activity_lamp">Lampes</string>
     <string name="activity_musique">Musique</string>
     <string name="activity_connexion">Connexion</string>

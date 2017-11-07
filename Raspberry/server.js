@@ -78,9 +78,16 @@ WSServer.sockets.on('connection', function (socket) {
                 socket.emit("loginResult", { success: false });
                 console.log(error);
             } else {
-                if (result[0].password == msg.password) {
-                    socket.emit("loginResult", { success: true });
+                if(result[0] != null) {
+                    if (result[0].password == msg.password) {
+                        socket.emit("loginResult", { success: true });
+                    } else {
+                        socket.emit("loginResult", { success: false });
+                    }
+                } else {
+                    socket.emit("loginResult", { success: false });
                 }
+                
             }
         });
     });

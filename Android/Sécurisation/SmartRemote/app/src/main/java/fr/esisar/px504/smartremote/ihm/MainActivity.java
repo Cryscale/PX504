@@ -12,6 +12,14 @@ import android.widget.TextView;
 
 import org.json.JSONException;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+
+import javax.crypto.Mac;
+
 import fr.esisar.px504.smartremote.R;
 import fr.esisar.px504.smartremote.handler.WebSocketHandler;
 import fr.esisar.px504.smartremote.websocket.WebSocketClient;
@@ -56,14 +64,26 @@ public class MainActivity extends AppCompatActivity {
         });
         final EditText pwdEditText = (EditText) findViewById(R.id.pwdEditText);
 
-        webSocketClient = new WebSocketClient(webSocketHandler);
+        //webSocketClient = new WebSocketClient(webSocketHandler);
+
+
 
         //define connection button
         Button connexionButton = (Button) findViewById(R.id.connexionButton);
         connexionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                webSocketClient.login(user, pwdEditText.getText().toString());
+                //webSocketClient.login(user, pwdEditText.getText().toString());*/
+                try {
+                    MessageDigest digest = MessageDigest.getInstance("SHA-256");
+                    byte[] hash = digest.digest(text.getBytes(StandardCharsets.UTF_8));
+                    String encoded = Base64.getEncoder().encodeToString(hash);
+                    System.out.println(new String(mg.digest()));
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
 
             }
         });
