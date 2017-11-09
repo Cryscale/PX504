@@ -1,11 +1,19 @@
 package fr.esisar.px504.smartremote.ihm;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -37,6 +45,13 @@ public class LampControlIHM extends AppCompatActivity {
     private LampAdapter adapter;
 
 
+    //Test menu
+    private ListView menuElementsList; //Menu
+    private DrawerLayout menuDrawerLayout;
+    private NavigationView menuNavigView;
+    private ActionBarDrawerToggle menuDrawerToggle; //Gère l'ouverture et la fermeture du menu
+    private String[] list_menu_item;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,31 +69,71 @@ public class LampControlIHM extends AppCompatActivity {
 
 
         Log.i("my_app", "begin");
-        //define toolbar **************************************************************************
+
         //define objet toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        //change text in toolbar
-        //TextView titleTextView = (TextView) findViewById(R.id.titreTextView);
-        this.titleTextView = (TextView) findViewById(R.id.titreTextView);
-        titleTextView.setText(R.string.activity_lamp);
 
 
-        //define image button menu in toolbar
-        final ImageButton menuImageButton = (ImageButton) findViewById(R.id.menuButton);
-        menuImageButton.setOnClickListener(new View.OnClickListener() {
+        getSupportActionBar().setTitle(R.string.activity_lamp);
 
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+       //active le menu
+        //recupere les layout
+        menuDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_lamp);
+        menuElementsList = (ListView) findViewById(R.id.list_menu);
+        menuNavigView = (NavigationView) findViewById(R.id.menu_navigView);
+        menuDrawerToggle = new ActionBarDrawerToggle(this,menuDrawerLayout,0,0);
+        menuDrawerLayout.addDrawerListener(menuDrawerToggle);
+
+        menuNavigView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LampControlIHM.this, MenuContollIHM.class);
-                intent.putExtra(ACTIVITY_NAME, R.string.activity_lamp);
-                startActivity(intent);
+            public boolean onNavigationItemSelected(MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    //TODO navigation de view en view
+
+                }
+                menuDrawerLayout.closeDrawers();  // CLOSE DRAWER
+                return true;
             }
         });
 
+        //TODO list dans le file string.xml avec array
+        String[] menuItem = new String[]{
+                "lamp", "musique", "déconnexion"
+        };
+        //creartion de l'adapteur qui rempli le menu
+        final ArrayAdapter<String> menuAdapter = new ArrayAdapter<String>(this,
+                R.layout.element_menu, menuItem);
+        menuElementsList.setAdapter(menuAdapter);
 
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // THIS IS YOUR DRAWER/HAMBURGER BUTTON
+            case android.R.id.home:
+                menuDrawerLayout.openDrawer(GravityCompat.START);  // OPEN DRAWER
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+   @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // synchroniser le drawerToggle après la restauration via onRestoreInstanceState
+       menuDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+       menuDrawerToggle.onConfigurationChanged(newConfig);
+    }
 
     @Override
     public void onDestroy() {
