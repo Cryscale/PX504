@@ -24,12 +24,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ihm.MenuContollIHM">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-        </activity>
-
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

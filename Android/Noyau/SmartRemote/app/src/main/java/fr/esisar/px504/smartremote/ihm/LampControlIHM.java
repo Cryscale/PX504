@@ -80,7 +80,7 @@ public class LampControlIHM extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-       //active le menu
+        //active le menu
         //recupere les layout
         menuDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_lamp);
         menuElementsList = (ListView) findViewById(R.id.list_menu);
@@ -122,17 +122,17 @@ public class LampControlIHM extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-   @Override
+    @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         // synchroniser le drawerToggle après la restauration via onRestoreInstanceState
-       menuDrawerToggle.syncState();
+        menuDrawerToggle.syncState();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-       menuDrawerToggle.onConfigurationChanged(newConfig);
+        menuDrawerToggle.onConfigurationChanged(newConfig);
     }
 
     @Override

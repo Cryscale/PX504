@@ -36,12 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        //define text in toolbar
-        TextView titleTextView = (TextView) findViewById(R.id.titreTextView);
-        titleTextView.setText(R.string.activity_connexion);
-        //define image button menu in toolbar
-        ImageButton menuImageButton = (ImageButton) findViewById(R.id.menuButton);
-        menuImageButton.setVisibility(View.INVISIBLE);
+
 
         //define connection ***********************************************************************
         //define connection variables
@@ -63,7 +58,9 @@ public class MainActivity extends AppCompatActivity {
         connexionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                webSocketClient.login(user, pwdEditText.getText().toString());
+               // webSocketClient.login(user, pwdEditText.getText().toString());
+                Intent intent = new Intent(MainActivity.this,LampControlIHM.class);
+                startActivity(intent);
 
             }
         });
