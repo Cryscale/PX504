@@ -102,7 +102,7 @@ public class LampControlIHM extends AppCompatActivity {
 
         //TODO list dans le file string.xml avec array
         String[] menuItem = new String[]{
-                "lamp", "musique", "déconnexion"
+                "Lampes", "Musique", "Déconnexion"
         };
         //creartion de l'adapteur qui rempli le menu
         final ArrayAdapter<String> menuAdapter = new ArrayAdapter<String>(this,
