@@ -173,7 +173,7 @@ port.on("open", function(){
 
 
 function setLamp(id, data){
-    port.write(id + " " + data);
+    port.write(id + "\r" + data);
 };
 
 function xbeeInit(){
@@ -213,8 +213,8 @@ function xbeeInit(){
 };
 
 function parseData(data) {
-    var id = data.substr(0, data.indexOf(" "));
-    var brightness = data.substr(data.indexOf(" "), data.length - 1);
+    var id = data.substr(0, data.indexOf("\r"));
+    var brightness = data.substr(data.indexOf("\r"), data.length - 1);
     mysqlClient.query("SELECT * FROM Lamp WHERE id=?", [parseInt(id)], (error, result) => {
         return({location: result[0].location, brightness: parseInt(brightness)});
     });
