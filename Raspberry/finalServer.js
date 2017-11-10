@@ -90,7 +90,11 @@ var mysqlClient = mysql.createConnection({
                     }
                 });*/
 
-                setLamp(String(msg.brightness));
+                mysqlClient.query("SELECT * FROM Lamp WHERE location=?", [msg.location], (error, result) => {
+                    setLamp(result[0].id, String(msg.brightness));
+                });
+
+                
 
         });
 
@@ -168,8 +172,8 @@ port.on("open", function(){
 //xbeeInit(count);
 
 
-function setLamp(data){
-    port.write(data);
+function setLamp(id, data){
+    port.write(id + " " + data);
 };
 
 function xbeeInit(){
@@ -209,9 +213,9 @@ function xbeeInit(){
 };
 
 function parseData(data) {
-    var id = data.substr(0, data.indexOf("\r"));
-    var brightness = data.substr(data.indexOf("\r"), data.length - 1);
+    var id = data.substr(0, data.indexOf(" "));
+    var brightness = data.substr(data.indexOf(" "), data.length - 1);
     mysqlClient.query("SELECT * FROM Lamp WHERE id=?", [parseInt(id)], (error, result) => {
         return({location: result[0].location, brightness: parseInt(brightness)});
-    })
+    });
 }
