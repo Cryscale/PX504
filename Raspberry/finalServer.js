@@ -22,6 +22,16 @@ myEmitter.on("ok", function () {
         else {
             console.log("Connexion à la base de données réussi");
             server.listen(8080);
+            mysqlClient.query("SELECT * FROM Lamp", (error, result) => {
+                for(var i=0; i<result.length; i++) {
+                    if(result[i].state == "off") {
+                        setLamp(result[i].id, String(0));
+                    } else {
+                        setLamp(result[i].id, String(result[i].brightness));
+                    }
+                }
+            });
+
             console.log("Serveur démarré, pour vous connecter à celui-ci, dans un navigateur Web, entrez l'adresse https://localhost:8080");
         }
     });
@@ -93,8 +103,12 @@ WSServer.sockets.on('connection', function (socket) {
         mysqlClient.query("SELECT * FROM Lamp WHERE location=?", [msg.location], (error, result) => {
             if (msg.state == "off") {
                 setLamp(result[0].id, String(0));
-            } else {
+            } else if(msg.state == result[0].state) {
+                console.log('HERHES');
                 setLamp(result[0].id, String(msg.brightness));
+            } else {
+                console.log('HERHfzeefzefzeES');
+                setLamp(result[0].id, String(result[0].brightness));
             }
 
         });
@@ -142,17 +156,55 @@ WSServer.sockets.on('connection', function (socket) {
 
 });
 
-port.on("open", function () {
+port.on("open", () => {
     console.log("open");
     xbeeInit();
-    port.on("data", function (data) {
+    port.on("data", (data) => {
         console.log("data received: " + data);
         if (data == "OK\r") {
             xbeeInit();
         } else {
 
-            var msg = parseData(data);
-            if (msg.brightness == 0) {
+            //update(parseData(data));
+            //console.log(parseData(data));
+            
+
+            var id = String(data).substr(0, String(data.indexOf("|")));
+            var brightness = String(data).substr(String(data).indexOf("|") + 1, String(data).indexOf("."));
+            mysqlClient.query("SELECT * FROM Lamp WHERE id=?", [parseInt(id)], (error, result) => {
+                console.log({ location: result[0].location, brightness: parseInt(brightness)});
+                var msg = {location: result[0].location, brightness: parseInt(brightness) };
+                if (msg.brightness == 0) {
+                    mysqlClient.query(
+                        "UPDATE Lamp SET State = ? WHERE location = ?",
+                        ["off", msg.location],
+                        (error, result) => {
+                            if (error != null) {
+                                console.log(error);
+                            } else {
+                                //socket.broadcast.emit("setLampResult", { location: msg.location, state: msg.state, brightness: msg.brightness });
+                                //socket.emit("setLampResult", { location: msg.location, state: msg.state, brightness: msg.brightness });
+                                WSServer.to('lampRoom').emit("setLampResult", { location: msg.location, state: "off", brightness: msg.brightness });
+                            }
+                        });
+                } else {
+                    mysqlClient.query(
+                        "UPDATE Lamp SET State = ?, brightness = ? WHERE location = ?",
+                        ["on", msg.brightness, msg.location],
+                        (error, result) => {
+                            if (error != null) {
+                                console.log(error);
+                            } else {
+                                //socket.broadcast.emit("setLampResult", { location: msg.location, state: msg.state, brightness: msg.brightness });
+                                //socket.emit("setLampResult", { location: msg.location, state: msg.state, brightness: msg.brightness });
+                                WSServer.to('lampRoom').emit("setLampResult", { location: msg.location, state: "on", brightness: msg.brightness });
+                            }
+                        });
+                }
+            });
+
+            //var msg = parseData(data);
+            /*if (parseData(data).brightness == 0) {
 
                 mysqlClient.query(
                     "UPDATE Lamp SET State = ? WHERE location = ?",
@@ -180,18 +232,17 @@ port.on("open", function () {
                             socket.to('lampRoom').emit("setLampResult", { location: msg.location, state: msg.state, brightness: msg.brightness });
                         }
                     });
-            }
+            }*/
 
         }
     });
 
 });
 
-//xbeeInit(count);
 
 
 function setLamp(id, data) {
-    port.write(id + "\r" + data + " ");
+    port.write(id + "|" + data + ".");
 };
 
 function xbeeInit() {
@@ -229,11 +280,3 @@ function xbeeInit() {
     }
 
 };
-
-function parseData(data) {
-    var id = data.substr(0, data.indexOf("\r"));
-    var brightness = data.substr(data.indexOf("\r"), data.indexOf(" "));
-    mysqlClient.query("SELECT * FROM Lamp WHERE id=?", [parseInt(id)], (error, result) => {
-        return ({ location: result[0].location, brightness: parseInt(brightness) });
-    });
-}

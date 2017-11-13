@@ -2,6 +2,7 @@ package fr.esisar.px504.smartremote.ihm;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,6 +161,8 @@ public class LampAdapter extends BaseAdapter {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (brightness != 0) {
                     ((LampControlIHM) context).changeState(new Lamp(lamp.getLocation(), "on", brightness));
+                } else {
+                    ((LampControlIHM) context).changeState(new Lamp(lamp.getLocation(), "on", 1));
                 }
 
             }

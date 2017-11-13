@@ -90,6 +90,7 @@ public class WebSocketClient {
         this.socket.on("setLampResult", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                System.out.println("GREGREERBQEGQREBQERRBQERRGQ");
                 Message msg = webSocketHandler.obtainMessage();
                 msg.arg1 = STATE_CHANGED;
                 msg.obj = (JSONObject) args[0];

@@ -94,7 +94,8 @@
                 android:id="@+id/brightness_bar"
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:max="100" />
+                android:max="100"
+                android:min="1"/>
 
             <TextView
                 android:id="@+id/brightness_max"
