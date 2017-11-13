@@ -10,7 +10,8 @@ const myEmitter = new MyEmitter();
 
 myEmitter.on("ok", function() {
 	//TODO : Valeur de la base de données à mettre ici 
-	setLamp("50");
+	setLamp("1\r50 ");
+	setLamp("2\r100 ");
 });
 
 port.on("open", function(){
