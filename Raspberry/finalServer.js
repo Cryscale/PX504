@@ -203,36 +203,7 @@ port.on("open", () => {
                 }
             });
 
-            //var msg = parseData(data);
-            /*if (parseData(data).brightness == 0) {
-
-                mysqlClient.query(
-                    "UPDATE Lamp SET State = ? WHERE location = ?",
-                    ["off", msg.location],
-                    (error, result) => {
-                        if (error != null) {
-                            console.log(error);
-                        } else {
-                            //socket.broadcast.emit("setLampResult", { location: msg.location, state: msg.state, brightness: msg.brightness });
-                            //socket.emit("setLampResult", { location: msg.location, state: msg.state, brightness: msg.brightness });
-                            socket.to('lampRoom').emit("setLampResult", { location: msg.location, state: msg.state, brightness: msg.brightness });
-                        }
-                    });
-
-            } else {
-                mysqlClient.query(
-                    "UPDATE Lamp SET State = ?, brightness = ? WHERE location = ?",
-                    ["on", msg.brightness, msg.location],
-                    (error, result) => {
-                        if (error != null) {
-                            console.log(error);
-                        } else {
-                            //socket.broadcast.emit("setLampResult", { location: msg.location, state: msg.state, brightness: msg.brightness });
-                            //socket.emit("setLampResult", { location: msg.location, state: msg.state, brightness: msg.brightness });
-                            socket.to('lampRoom').emit("setLampResult", { location: msg.location, state: msg.state, brightness: msg.brightness });
-                        }
-                    });
-            }*/
+           
 
         }
     });
