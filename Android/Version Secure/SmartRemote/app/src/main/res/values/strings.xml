@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Smart Remote</string>
+    <string name="activity_lamp">Lampes</string>
+    <string name="activity_musique">Musique</string>
+    <string name="activity_connexion">Connexion</string>
+    <string name="activity_deconnexion">Deconnexion</string>
+    <string name="loggin">Identifiant</string>
+    <string name="pwd">Mot de passe</string>
+    <string name="location1">Ecrire 1</string>
+    <string name="location2">Ecrire 1</string>
+    <string name="location3">Ecrire 1</string>
+    <string name="location4">Ecrire 1</string>
+    <string name="location5">Ecrire 1</string>
+    <string name="luminosite">Luminosité :</string>
+    <string name="luminosite_min">1</string>
+    <string name="luminosite_max">100</string>
+</resources>
