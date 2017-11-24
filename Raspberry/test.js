@@ -34,21 +34,19 @@ app.post('/login', (req, res) => {
     res.setHeader('Content-Type', 'text/plain');
     res.setHeader('Cookie', "TEST");
     console.log(req.body.username);
-    mysqlClient.query("SELECT password FROM User WHERE username=?", [req.body.username], (error, result) => {
+    mysqlClient.query("SELECT password FROM User WHERE username=? AND password=?", [req.body.username, req.body.password], (error, result) => {
 
         if (error != null) {
             req.session.destroy();
+            console.log(error)
             res.end("ERROR");
         } else {
             if (result[0] != null) {
-                if (result[0].password == req.body.password) {
-                    
-                    res.end("OK");
-                } else {
-                    req.session.destroy();
-                    res.end("ERROR PASSWORD");
-                }
+
+                res.end("OK");
+
             } else {
+                
                 req.session.destroy();
                 res.end("ERROR USERNAME");
             }
