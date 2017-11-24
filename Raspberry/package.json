@@ -2,6 +2,10 @@
   "name": "WebServer",
   "version": "0.0.1",
   "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "express-mysql-session": "^1.2.3",
+    "express-session": "^1.15.6",
     "mysql": "^2.15.0",
     "serialport": "^6.0.4",
     "socket.io": "^2.0.3"
