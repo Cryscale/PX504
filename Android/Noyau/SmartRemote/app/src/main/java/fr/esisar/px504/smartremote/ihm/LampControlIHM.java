@@ -1,8 +1,10 @@
 package fr.esisar.px504.smartremote.ihm;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,16 +19,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import fr.esisar.px504.smartremote.R;
 import fr.esisar.px504.smartremote.handler.WebSocketHandler;
+import fr.esisar.px504.smartremote.vocalcontrol.VocalControl;
 import fr.esisar.px504.smartremote.websocket.WebSocketClient;
 
 /**
@@ -52,6 +58,13 @@ public class LampControlIHM extends AppCompatActivity {
     private ActionBarDrawerToggle menuDrawerToggle; //Gère l'ouverture et la fermeture du menu
     private String[] list_menu_item;
 
+    // Test vocal
+    private VocalControl vocalControl = new VocalControl(this);
+    private TextView textInput;
+    private TextView analyse;
+    private ImageButton buttonMic;
+    private final int REQ_CODE_SPEECH_INPUT = 100;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,19 +79,29 @@ public class LampControlIHM extends AppCompatActivity {
         listView.setAdapter(adapter);
         webSocketClient.getListLamp(user);
 
-
-
         Log.i("my_app", "begin");
 
         //define objet toolbar
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-
-
         getSupportActionBar().setTitle(R.string.activity_lamp);
-
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        // Test vocal
+        textInput = (TextView) findViewById(R.id.textInput);
+        analyse = (TextView) findViewById(R.id.analyse);
+        buttonMic = (ImageButton) findViewById(R.id.buttonMic);
+
+        // Gestion de l'evenement du clic sur l'icone du micro
+        buttonMic.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                promptSpeechInput();
+            }
+        });
 
         //active le menu
         //recupere les layout
@@ -194,4 +217,60 @@ public class LampControlIHM extends AppCompatActivity {
     }
 
 
+    // Test vocal
+
+    private void promptSpeechInput() {
+        // Creation d'un intent pour démarrer l'activite d'ecoute
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        // Choix du modele de language :
+        // LANGUAGE_MODEL_FREE_FORM en general
+        // LANGUAGE_MODEL_WEB_SEARCH pour les requetes plus courtes
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        // Langue par defaut du systeme
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                getString(R.string.speech_prompt));
+
+        // Lancement de l'activite avec les paramètres choisis ci-dessus
+        try {
+            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+        } catch (ActivityNotFoundException a) {
+            Toast.makeText(getApplicationContext(),
+                    getString(R.string.speech_not_supported),
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Receiving speech input
+     * */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT: {
+                if (resultCode == RESULT_OK && null != data) {
+
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+                    //String [] sentence = result.get(0).split(" ");
+
+                    textInput.setText(result.get(0));
+                    String text = "";
+                   List<Lamp> listLamp = vocalControl.SyntacticAnalysis(result);
+
+                   for (Lamp lamp : listLamp) {
+                       text = text + lamp.getLocation() + lamp.getState() + lamp.getbrightness();
+                    }
+                   //text = listLamp.get(0).getLocation();
+                    analyse.setText(text);
+                    break;
+                }
+
+            }
+        }
+    }
 }
