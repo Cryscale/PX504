@@ -30,6 +30,8 @@
         <item>envoyons</item>
         <item>mettre</item>
         <item>mets</item>
+        <item>met</item>
+        <item>mais</item>
         <item>mettons</item>
         <item>régler</item>
         <item>règle</item>
@@ -53,6 +55,9 @@
         name="action_word_off">
         <item>éteindre</item>
         <item>éteins</item>
+        <item>éteint</item>
+        <item>est un</item>
+        <item>et un</item>
         <item>éteignons</item>
         <item>arrêter</item>
         <item>arrête</item>

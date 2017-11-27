@@ -88,8 +88,8 @@
                 android:id="@+id/list_lamp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@id/micro"/>
-
+                android:layout_above="@id/micro"
+                android:layout_below="@+id/my_toolbar"/>
 
         </RelativeLayout>
 
@@ -107,4 +107,5 @@
             android:layout_height="wrap_content" />
 
     </android.support.design.widget.NavigationView>
+
 </android.support.v4.widget.DrawerLayout>
