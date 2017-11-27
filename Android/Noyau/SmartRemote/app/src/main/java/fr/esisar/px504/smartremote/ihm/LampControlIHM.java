@@ -108,7 +108,7 @@ public class LampControlIHM extends AppCompatActivity {
         menuDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_lamp);
         menuElementsList = (ListView) findViewById(R.id.list_menu);
         menuNavigView = (NavigationView) findViewById(R.id.menu_navigView);
-        menuDrawerToggle = new ActionBarDrawerToggle(this,menuDrawerLayout,0,0);
+        menuDrawerToggle = new ActionBarDrawerToggle(this, menuDrawerLayout, 0, 0);
         menuDrawerLayout.addDrawerListener(menuDrawerToggle);
 
         menuNavigView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -168,15 +168,14 @@ public class LampControlIHM extends AppCompatActivity {
     }
 
     /**
-     *
      * @param list : Liste obtenue à la réception du message WebSocket "listLamp"
-     *
-     * Initialise la liste de lampe de l'application a partir de la liste obtenue dans le message WebSocket
+     *             <p>
+     *             Initialise la liste de lampe de l'application a partir de la liste obtenue dans le message WebSocket
      */
 
     public void initList(JSONArray list) {
         try {
-            for(int i =0; i< list.length(); i++) {
+            for (int i = 0; i < list.length(); i++) {
                 JSONObject lamp = (JSONObject) list.get(i);
                 this.list.add(new Lamp(lamp.getString("location"), lamp.getString("state"), lamp.getInt("brightness")));
             }
@@ -188,17 +187,16 @@ public class LampControlIHM extends AppCompatActivity {
     }
 
     /**
-     *
      * @param lamp : Lampe qui a changé d'état
-     *
-     * Actualise la liste de lampe en modifiant celle qui a changé d'état
+     *             <p>
+     *             Actualise la liste de lampe en modifiant celle qui a changé d'état
      */
 
     public void updateList(Lamp lamp) {
 
-        for(Lamp previousLamp : list) {
+        for (Lamp previousLamp : list) {
 
-            if(previousLamp.getLocation().equals(lamp.getLocation())) {
+            if (previousLamp.getLocation().equals(lamp.getLocation())) {
                 list.set(list.indexOf(previousLamp), lamp);
                 adapter.notifyDataSetChanged();
             }
@@ -206,10 +204,9 @@ public class LampControlIHM extends AppCompatActivity {
     }
 
     /**
-     *
      * @param lamp : Lampe destinée au changement d'état
-     *
-     * Utilise le client WebSocket pour envoyer une demande de changement d'état d'une lampe
+     *             <p>
+     *             Utilise le client WebSocket pour envoyer une demande de changement d'état d'une lampe
      */
 
     public void changeState(Lamp lamp) {
@@ -244,7 +241,7 @@ public class LampControlIHM extends AppCompatActivity {
 
     /**
      * Receiving speech input
-     * */
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -260,12 +257,13 @@ public class LampControlIHM extends AppCompatActivity {
 
                     textInput.setText(result.get(0));
                     String text = "";
-                   List<Lamp> listLamp = vocalControl.SyntacticAnalysis(result);
+                    List<Lamp> listLamp = vocalControl.SyntacticAnalysis(result);
 
-                   for (Lamp lamp : listLamp) {
-                       text = text + lamp.getLocation() + lamp.getState() + lamp.getbrightness();
+                    for (Lamp lamp : listLamp) {
+                        text = text + lamp.getLocation() + lamp.getState() + lamp.getbrightness();
+                        webSocketClient.changeState(lamp);
                     }
-                   //text = listLamp.get(0).getLocation();
+                    //text = listLamp.get(0).getLocation();
                     analyse.setText(text);
                     break;
                 }

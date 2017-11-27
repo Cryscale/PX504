@@ -109,7 +109,7 @@ public class WebSocketClient {
             IO.Options opts = new IO.Options();
             opts.callFactory = okHttpClient;
             opts.webSocketFactory = okHttpClient;
-            this.socket = IO.socket("https://192.168.1.12:8080", opts);
+            this.socket = IO.socket("https://192.168.10.1:8080", opts);
 
             socket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
                 @Override

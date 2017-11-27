@@ -18,6 +18,8 @@ public class Lamp {
     }
 
 
+
+
     public String getLocation() {
         return this.location;
     }
