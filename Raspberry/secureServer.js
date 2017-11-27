@@ -18,27 +18,18 @@ const myEmitter = new MyEmitter();
 myEmitter.on("ok", function () {
 
 
-    mysqlClient.connect(error => {
-        if (error != null) {
-            console.log(error);
-            process.exit();
-        }
-        else {
-            console.log("Connexion à la base de données réussi");
-            server.listen(8080);
-            mysqlClient.query("SELECT * FROM Lamp", (error, result) => {
-                for (var i = 0; i < result.length; i++) {
-                    if (result[i].state == "off") {
-                        setLamp(result[i].id, String(0));
-                    } else {
-                        setLamp(result[i].id, String(result[i].brightness));
-                    }
-                }
-            });
-
-            console.log("Serveur démarré, pour vous connecter à celui-ci, dans un navigateur Web, entrez l'adresse https://localhost:8080");
+    server.listen(8080);
+    mysqlClient.query("SELECT * FROM Lamp", (error, result) => {
+        for (var i = 0; i < result.length; i++) {
+            if (result[i].state == "off") {
+                setLamp(result[i].id, String(0));
+            } else {
+                setLamp(result[i].id, String(result[i].brightness));
+            }
         }
     });
+
+    console.log("Serveur démarré, pour vous connecter à celui-ci, dans un navigateur Web, entrez l'adresse https://localhost:8080");
 
 });
 
@@ -50,6 +41,15 @@ var mysqlClient = mysql.createConnection({
 });
 
 var sessionStore = new MySQLStore({}, mysqlClient);
+
+mysqlClient.connect(error => {
+    if (error != null) {
+        console.log(error);
+        process.exit();
+    } else {
+        console.log("BD connectée");
+    }
+});
 
 var app = express()
 
@@ -209,7 +209,7 @@ WSServer.sockets.on('connection', function (socket) {
     
         PS : Préciser la localisation de la lampe grâce à la BDD
         socket.emit("zigbeeFail", {error: "Erreur : la connexion avec la lampe à été perdu"});
-
+ 
         En cas de défaillance du module zigbee sur la Raspberry
         socket.emit("zigbeeFail", {error: "Erreur : Le module Zigbee de la Raspberry est défaillant});
     */
@@ -270,6 +270,10 @@ port.on("open", () => {
     });
 
 });
+
+function connect() {
+
+}
 
 
 
