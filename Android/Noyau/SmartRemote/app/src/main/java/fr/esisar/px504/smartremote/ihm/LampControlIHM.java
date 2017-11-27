@@ -265,7 +265,7 @@ public class LampControlIHM extends AppCompatActivity {
                    for (Lamp lamp : listLamp) {
                        text = text + lamp.getLocation() + lamp.getState() + lamp.getbrightness();
                     }
-                   //text = listLamp.get(0).getLocation();
+                   //text =  listLamp.get(0).getLocation();
                     analyse.setText(text);
                     break;
                 }
