@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         cookie.setPath("/");
         cookie.setVersion(0);
         try {
-            cookieManager.getCookieStore().add(new URI("http://192.168.1.12:8080/"), cookie);
+            cookieManager.getCookieStore().add(new URI("http://192.168.10.1:8080/"), cookie);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -138,12 +138,13 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             };
 
-                            MessageDigest DMsg = MessageDigest.getInstance("SHA-256");
-                            String password = bytesToHex(DMsg.digest(pwdEditText.getText().toString().getBytes(StandardCharsets.UTF_8)));
-                            System.out.println(password);
+                            //MessageDigest DMsg = MessageDigest.getInstance("SHA-256");
+                            //String password = bytesToHex(DMsg.digest(pwdEditText.getText().toString().getBytes(StandardCharsets.UTF_8)));
+                            //System.out.println(password);
 
-                            URL url = new URL("https://192.168.1.12:8080/login");
-                            String urlParameters  = "username="+logginEditText.getText()+"&password="+password;
+                            URL url = new URL("https://192.168.10.1:8080/login");
+                            //String urlParameters  = "username="+logginEditText.getText()+"&password="+password;
+                            String urlParameters  = "username="+logginEditText.getText()+"&password="+pwdEditText.getText();
                             byte[] postData       = urlParameters.getBytes( StandardCharsets.UTF_8 );
 
                             https = (HttpsURLConnection) url.openConnection();
@@ -189,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             String cookie = cookieManager.getCookieStore()
-                    .get(new URI("https://192.168.1.12:8080/"))
+                    .get(new URI("https://192.168.10.1:8080/"))
                     .get(0)
                     .getValue();
 

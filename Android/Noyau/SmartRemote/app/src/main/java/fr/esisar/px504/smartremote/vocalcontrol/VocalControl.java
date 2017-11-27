@@ -77,7 +77,7 @@ public class VocalControl {
             }
 
             // Recherche de l'action (luminosité)
-            String[] arrayBrightness = res.getStringArray(R.array.brightness_number);
+            /*String[] arrayBrightness = res.getStringArray(R.array.brightness_number);
             for(int j=0; j < arrayBrightness.length; j++){
                 if (arrayBrightness[j].equals(sentence[i])){
                     brightness[nb_brightness] = Integer.parseInt(arrayBrightness[j]);
@@ -85,6 +85,21 @@ public class VocalControl {
                 }else if(j == arrayBrightness.length -1 & nb_brightness == 0){
                     brightness[nb_brightness] = 0;
                 }
+            }*/
+
+            //  On teste si le mot courant commence par un chiffre
+            char c = sentence[i].charAt(0);
+            if (c > '0' && c <= '9') {
+                int number = Integer.parseInt(sentence[i]);
+                // On vérifie que ce nombre possède une valeur cohérente pour la luminosité
+                if(number > 0 && number <= 100){
+                    brightness[nb_brightness] = number;
+                    nb_brightness++;
+                }
+            }
+            else if (nb_brightness == 0 && i == sentence.length -1){
+                brightness[nb_brightness] = 0;
+
             }
         }
 
@@ -113,7 +128,9 @@ public class VocalControl {
 
 
         // TODO : Envoyer message vers bd
-        //webSocketClient.changeState(vocalControl.SyntacticAnalysis(result));
+
+
+
 
         return listLamp;
     }
