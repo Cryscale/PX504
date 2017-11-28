@@ -57,9 +57,9 @@ public class MainActivity extends AppCompatActivity {
         Button connexionButton = (Button) findViewById(R.id.connexionButton);
         connexionButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                webSocketClient.login(user, pwdEditText.getText().toString());
-                //Intent intent = new Intent(MainActivity.this,LampControlIHM.class);
-                //startActivity(intent);
+                //webSocketClient.login(user, pwdEditText.getText().toString());
+                Intent intent = new Intent(MainActivity.this,LampControlIHM.class);
+                startActivity(intent);
 
             }
         });
