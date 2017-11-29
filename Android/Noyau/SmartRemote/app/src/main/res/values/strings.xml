@@ -24,6 +24,7 @@
         name="action_word_on">
         <item>allumer</item>
         <item>allume</item>
+        <item>allumé</item>
         <item>allumons</item>
         <item>envoyer</item>
         <item>envoie</item>
@@ -57,8 +58,6 @@
         <item>éteindre</item>
         <item>éteins</item>
         <item>éteint</item>
-        <item>est un</item>
-        <item>et un</item>
         <item>éteignons</item>
         <item>arrêter</item>
         <item>arrête</item>

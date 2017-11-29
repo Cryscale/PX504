@@ -42,6 +42,7 @@ public class VocalControl {
         this.context = context;
     }
     //Analyse syntaxique
+
     public List<Lamp> SyntacticAnalysis(ArrayList<String> text) {
         location = new String[10];
         state = new String[10];
@@ -233,4 +234,308 @@ public class VocalControl {
         return listLamp;
     }
 
+
+    public List<Lamp> SyntacticAnalysis_version3(ArrayList<String> text) {
+        location = new String[100];
+        state = new String[100];
+        brightness = new Integer[100];
+        location_position = new Integer[100];
+        state_position = new Integer[100];
+        brightness_position = new Integer[100];
+
+        //Parse la phrase
+        Resources res = context.getResources();
+        String[] sentence = text.get(0).split(" ");
+        sentence[0] = sentence[0].toLowerCase();
+        int nb_location = 0;
+        int nb_state = 0;
+        int nb_brightness = 0;
+        List<Lamp> listLamp = new ArrayList<Lamp>();
+        String[] arrayLocation = res.getStringArray(R.array.location_word);
+        String[] arrayStateOn = res.getStringArray(R.array.action_word_on);
+        String[] arrayStateOff = res.getStringArray(R.array.action_word_off);
+
+        for(int i=0; i<sentence.length; i++){
+
+            // Recherche de la localisation ( cuisine, salon)
+            for(int j=0; j < arrayLocation.length; j++){
+                if (arrayLocation[j].equals(sentence[i])){
+                    location[i] = arrayLocation[j];
+                    location_position[nb_location] = i;
+                    Log.d(TAG, "jai trouvé la location"+ nb_location+" "+ arrayLocation[j]+ " au mot "+ i);
+                    nb_location++;
+                }
+            }
+
+            // Recherche de l'action (allumé, éteindre,etc)
+
+            if (Arrays.asList(arrayStateOn).contains(sentence[i])) {
+                state[i] = "on";
+                state_position[nb_state] = i;
+                Log.d(TAG, "jai trouvé une action"+ nb_state +" "+ sentence[i]+ " au mot "+ i);
+                nb_state++;
+            }
+            else if (Arrays.asList(arrayStateOff).contains(sentence[i])){
+                state[i] = "off";
+                state_position[nb_state] = i;
+                Log.d(TAG, "jai trouvé une action"+ nb_state+" "+ sentence[i]+ " au mot "+ i);
+                nb_state++;
+                //brightness[nb_brightness]= 0;
+                //nb_brightness++;
+            }
+            // Traitement du cas où "éteins" est compris comme "et un" ou "est un"
+            else if (i < sentence.length-2 && sentence[i].equals("un") ){
+                for(int j=0; j < arrayLocation.length; j++){
+                    if (arrayLocation[j].equals(sentence[i+1]) || arrayLocation[j].equals(sentence[i+2])) {
+                        state[i] = "off";
+                        state_position[nb_state] = i;
+                        nb_state++;
+                    }
+                }
+            }
+
+            // Recherche de la luminosité (1, 2, ...,100)
+            //  On teste si le mot courant commence par un chiffre
+            char c = sentence[i].charAt(0);
+            if (c > '0' && c <= '9') {
+                int number = Integer.parseInt(sentence[i]);
+                // On vérifie que ce nombre possède une valeur cohérente pour la luminosité
+                if(number > 0 && number <= 100){
+                    brightness[i] = number;
+                    brightness_position[nb_brightness] = i;
+                    Log.d(TAG, "jai trouvé une luminosité"+ nb_brightness +" "+ number + " au mot "+ i);
+                    nb_brightness++;
+                }
+            }
+           /* else if (nb_brightness == 0 && i == sentence.length -1){
+                brightness[nb_brightness] = 0;
+                nb_brightness++;
+
+            }*/
+        }
+
+        //traitement des différentes requetes
+        for (int x = 0; x< nb_location ; x++){
+            int max =0;
+            int min = sentence.length;
+            for (int y = 0; y<sentence.length; y++){
+                if(y <= nb_state && state_position[y] != null){
+                    if (state_position[y]>= max && state_position[y]<location_position[x]){
+                        max = state_position[y];
+                        Log.d(TAG, "j'anlayse la plus grande action avant la localisation " +
+                                "qui est actuellement "+ max);
+                    }
+                }
+                if(y <= nb_brightness && brightness_position[y] != null ){
+                    if (brightness_position[y] <= min && brightness_position[y] > location_position[x]) {
+                        min = brightness_position[y];
+                        Log.d(TAG, "j'analyse la plus petite luminosité " +
+                                "après la localisation et avant la prochaine " +
+                                "qui est actuellement"+ min);
+                    }
+                }
+            }
+            if (state[max] != null ){
+                if (brightness[min]!= null){
+                    listLamp.add(new Lamp(location[location_position[x]],
+                            state[max],brightness[min]));
+                    Log.d(TAG, "j'ai une lampe à 3 arguments");
+                }else{
+                    listLamp.add(new Lamp(location[location_position[x]],
+                            state[max],0));
+                    Log.d(TAG, "j'ai une lampe à 2 arguments");
+                }
+            }else{
+                Log.d(TAG, "j'ai que " + location[location_position[x]]);
+            }
+        }
+
+        return listLamp;
+    }
+
+
+    public List<Lamp> NewSyntacticAnalysis(ArrayList<String> text) {
+        location = new String[100];
+        state = new String[100];
+        brightness = new Integer[100];
+        location_position = new Integer[100];
+        state_position = new Integer[100];
+        brightness_position = new Integer[100];
+
+        //Parse la phrase
+        Resources res = context.getResources();
+        String[] sentence = text.get(0).split(" ");
+        sentence[0] = sentence[0].toLowerCase();
+        int nb_location = 0;
+        int nb_state = 0;
+        int nb_brightness = 0;
+        int k=0;
+        int i=0;
+        int l=0;
+        int m=1;
+        int tmp;
+        List<Lamp> listLamp = new ArrayList<Lamp>();
+        String[] arrayLocation = res.getStringArray(R.array.location_word);
+        String[] arrayStateOn = res.getStringArray(R.array.action_word_on);
+        String[] arrayStateOff = res.getStringArray(R.array.action_word_off);
+        NextWord word;
+
+        for(i=0; i<sentence.length; i++) {
+            // Tant que l'on n'arrive pas à la prochaine instruction
+            if (i < l){
+               continue;
+            }
+            else if(i == l){
+                word = NextKeyword(sentence, i, arrayLocation, arrayStateOn, arrayStateOff);
+                Log.d(TAG, "i vaut" + i + "Et on a comme mot courant = " + word.getWord());
+
+                switch (word.getState()) {
+                    case "VERB":
+                        state[k] = word.getWord();
+                        Log.d(TAG, "J'ai détecté verbe");
+                        word = NextKeyword(sentence, word.getPos() + 1, arrayLocation, arrayStateOn, arrayStateOff);
+
+                        switch (word.getState()) {
+                            case "LOCATION":
+                                Log.d(TAG, "J'ai détecté un emplacement");
+                                location[k] = word.getWord();
+                                word = NextKeyword(sentence, word.getPos() + 1, arrayLocation, arrayStateOn, arrayStateOff);
+
+                                switch (word.getState()) {
+                                    case "VERB":
+                                         listLamp.add(new Lamp(state[k], location[k], 0));
+                                          k++;
+                                          l = word.getPos();
+                                          continue;
+
+                                    case "LUMINOSITY":
+                                        brightness[k] = Integer.parseInt(word.getWord());
+                                        listLamp.add(new Lamp(state[k], location[k], brightness[k]));
+                                        k++;
+                                        l = word.getPos() + 1;
+                                        Log.d(TAG, "J'ai détecté luminosité" + k + l);
+                                        continue;
+
+                                    case "LOCATION":
+                                        m = 1;
+                                        tmp=0;
+                                        // Tant que l'utilisateur prononce des emplacements
+                                        while(word.getState().equals("LOCATION")){
+                                            location[k+m] = word.getWord();
+                                            m++;
+                                            word = NextKeyword(sentence, word.getPos() + 1, arrayLocation, arrayStateOn, arrayStateOff);
+                                        }
+                                        if(word.getState().equals("LUMINOSITY")){
+                                            brightness[k] = Integer.parseInt(word.getWord());
+                                        }
+                                        else{
+                                            brightness[k] = 0;
+                                        }
+                                        for(int j=0; j<m;j++){
+                                            listLamp.add(new Lamp(state[k], location[k+j], brightness[k]));
+                                            tmp++;
+                                        }
+                                        k+=tmp;
+                                        Log.d(TAG, "Le mot courant est " + word.getWord());
+
+                                        l= word.getPos();
+                                        continue;
+                                    case "END":
+                                        listLamp.add(new Lamp(state[k], location[k], 0));
+                                        k++;
+                                }
+                                break;
+
+                            case "LUMINOSITY":
+                                brightness[k] = Integer.parseInt(word.getWord());
+                                word = NextKeyword(sentence, word.getPos() + 1, arrayLocation, arrayStateOn, arrayStateOff);
+
+                                switch (word.getState()) {
+                                    case "LOCATION":
+                                        location[k] = word.getWord();
+                                        listLamp.add(new Lamp(state[k], location[k], brightness[k]));
+                                        k++;
+                                        l = word.getPos() + 1;
+                                        continue;
+
+                                }
+
+                        }
+                        break;
+
+                    case "LOCATION":
+                        location[k] = word.getWord();
+                        word = NextKeyword(sentence, word.getPos() + 1, arrayLocation, arrayStateOn, arrayStateOff);
+
+                        switch (word.getState()) {
+                            case "LUMINOSITY":
+                                brightness[k] = Integer.parseInt(word.getWord());
+                                listLamp.add(new Lamp("on", location[k], brightness[k]));
+                                k++;
+
+                            case "VERB":
+                                state[k] = word.getWord();
+                                word = NextKeyword(sentence, word.getPos() + 1, arrayLocation, arrayStateOn, arrayStateOff);
+                                switch (word.getState()) {
+                                    case "LUMINOSITY":
+                                        brightness[k] = Integer.parseInt(word.getWord());
+                                        listLamp.add(new Lamp(state[k], location[k], brightness[k]));
+                                        k++;
+                                }
+                        }
+                    case "LUMINOSITY":
+                }
+            }
+        }
+        return listLamp;
+    }
+
+
+
+        public NextWord NextKeyword(String[] sentence, int pos, String[] arrayLocation, String[] arrayStateOn, String[] arrayStateOff){
+            for(int i=pos; i<sentence.length; i++){
+                char c = sentence[i].charAt(0);
+
+                //Détection si le mot est un emplacement
+                for(int j=0; j < arrayLocation.length; j++) {
+                    if (arrayLocation[j].equals(sentence[i])) {
+                        NextWord nextWord = new NextWord(arrayLocation[j], i, "LOCATION");
+                        return nextWord;
+                    }
+                }
+
+                //Détection si le mot est une action positive
+                if (Arrays.asList(arrayStateOn).contains(sentence[i])) {
+                    NextWord nextWord = new NextWord("on", i, "VERB");
+                    return nextWord;
+                }
+
+                //Détection si le mot est une action négative
+                if (Arrays.asList(arrayStateOff).contains(sentence[i])) {
+                    NextWord nextWord = new NextWord("off", i, "VERB");
+                    return nextWord;
+                }
+                if(i< sentence.length-1){
+                    if( ((sentence[i].equals("et")) || (sentence[i].equals("est"))) && ((sentence[i+1].equals("un")) || (sentence[i+1].equals("1"))) ){
+                        NextWord nextWord = new NextWord("off", i+1, "VERB");
+                        return nextWord;
+                    }
+                }
+
+                //Détection si le mot est un nombre entre 1 et 100
+                if(c > '0' && c <= '9'){
+                    int number = Integer.parseInt(sentence[i]);
+                    // On vérifie que ce nombre possède une valeur cohérente pour la luminosité
+                    if(number > 0 && number <= 100) {
+                        NextWord nextWord = new NextWord(sentence[i], i, "LUMINOSITY");
+                        return nextWord;
+                    }
+
+                    }
+
+            }
+
+            NextWord nextWord = new NextWord("NULL", 0,"END");
+            return nextWord;
+        }
 }
