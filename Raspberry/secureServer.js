@@ -68,6 +68,7 @@ app.post('/login', (req, res) => {
     res.setHeader('Content-Type', 'text/plain');
     res.setHeader('Cookie', "TEST");
     console.log(req.body.username);
+    console.log(req.body.password);
     mysqlClient.query("SELECT password FROM User WHERE username=? AND password=?", [req.body.username, req.body.password], (error, result) => {
 
         if (error != null) {
@@ -149,27 +150,25 @@ WSServer.sockets.on('connection', function (socket) {
 
         console.log('Requète de changement');
 
-        /*mysqlClient.query(
-            "UPDATE Lamp SET State = ?, brightness = ? WHERE location = ?",
-            [msg.state, msg.brightness, msg.location],
-            (error, result) => {
-                if (error != null) {
-                    console.log(error);
-                } else {
-                    socket.broadcast.emit("setLampResult", { location: msg.location, state: msg.state, brightness: msg.brightness });
-                    socket.emit("setLampResult", { location: msg.location, state: msg.state, brightness: msg.brightness });
-                }
-            });*/
 
         mysqlClient.query("SELECT * FROM Lamp WHERE location=?", [msg.location], (error, result) => {
             if (msg.state == "off") {
                 setLamp(result[0].id, String(0));
+                console.log("Test 3");
             } else if (msg.state == result[0].state) {
-                console.log('HERHES');
-                setLamp(result[0].id, String(msg.brightness));
+                console.log("Test 2");
+                if(msg.brightness != null) {
+                    setLamp(result[0].id, String(msg.brightness));
+                } 
+                
             } else {
-                console.log('HERHfzeefzefzeES');
-                setLamp(result[0].id, String(result[0].brightness));
+                console.log("Test 1");
+                if(msg.brightness == null) {
+                    setLamp(result[0].id, String(result[0].brightness));
+                } else {
+                    setLamp(result[0].id, String(msg.brightness));
+                }
+                
             }
 
         });

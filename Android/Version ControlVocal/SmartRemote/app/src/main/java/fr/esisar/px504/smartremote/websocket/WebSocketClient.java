@@ -241,7 +241,10 @@ public class WebSocketClient {
         try {
             msg.put("location", lamp.getLocation());
             msg.put("state", lamp.getState());
-            msg.put("brightness", lamp.getbrightness());
+            if(lamp.getbrightness() !=0) {
+                msg.put("brightness", lamp.getbrightness());
+            }
+
             socket.emit("setLamp", msg);
         } catch (JSONException e) {
             e.printStackTrace();

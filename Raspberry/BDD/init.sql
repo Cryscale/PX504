@@ -12,14 +12,14 @@ CREATE TABLE Lamp (
 );
 
 CREATE TABLE User (
-  username  VARCHAR(40) PRIMARY KEY,
+  username  VARCHAR(150) PRIMARY KEY,
   lastname VARCHAR(40) NOT NULL,
   firstname VARCHAR(40) NOT NULL,
-  password VARCHAR(256) NOT NULL
+  password VARCHAR(150) NOT NULL
 );
 
 CREATE TABLE Control (
-  username VARCHAR(40) NOT NULL,
+  username VARCHAR(150) NOT NULL,
   id TINYINT NOT NULL,
   CONSTRAINT pk_Control PRIMARY KEY (username, id),
   CONSTRAINT FOREIGN KEY (username) REFERENCES User(username),

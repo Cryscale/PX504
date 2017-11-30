@@ -348,7 +348,7 @@ public class VocalControl {
                         switch (word.getState()) {
                             case "LUMINOSITY":
                                 brightness[k] = Integer.parseInt(word.getWord());
-                                listLamp.add(new Lamp("on", location[k], brightness[k]));
+                                listLamp.add(new Lamp(location[k],"on" , brightness[k]));
                                 k++;
 
                             case "VERB":
@@ -394,7 +394,7 @@ public class VocalControl {
                 return nextWord;
             }
             if(i< sentence.length-1){
-                if( ((sentence[i].equals("et")) || (sentence[i].equals("est"))) && ((sentence[i+1].equals("un")) || (sentence[i+1].equals("1"))) ){
+                if( ((sentence[i].equals("et")) || (sentence[i].equals("est"))) && ((sentence[i+1].equals("un")) || (sentence[i+1].equals("1")) || (sentence[i+1].equals("dans"))) ){
                     NextWord nextWord = new NextWord("off", i+1, "VERB");
                     return nextWord;
                 }

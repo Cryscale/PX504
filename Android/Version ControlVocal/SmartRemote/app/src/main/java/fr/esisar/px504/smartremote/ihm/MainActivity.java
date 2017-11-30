@@ -138,13 +138,14 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             };
 
-                            //MessageDigest DMsg = MessageDigest.getInstance("SHA-256");
-                            //String password = bytesToHex(DMsg.digest(pwdEditText.getText().toString().getBytes(StandardCharsets.UTF_8)));
+                            MessageDigest DMsg = MessageDigest.getInstance("SHA-256");
+                            String password = bytesToHex(DMsg.digest(pwdEditText.getText().toString().getBytes(StandardCharsets.UTF_8)));
+                            String user = bytesToHex(DMsg.digest(logginEditText.getText().toString().getBytes(StandardCharsets.UTF_8)));
                             //System.out.println(password);
 
                             URL url = new URL("https://192.168.10.1:8080/login");
-                            //String urlParameters  = "username="+logginEditText.getText()+"&password="+password;
-                            String urlParameters  = "username="+logginEditText.getText()+"&password="+pwdEditText.getText();
+                            String urlParameters  = "username="+user+"&password="+password;
+                            //String urlParameters  = "username="+logginEditText.getText()+"&password="+pwdEditText.getText();
                             byte[] postData       = urlParameters.getBytes( StandardCharsets.UTF_8 );
 
                             https = (HttpsURLConnection) url.openConnection();
@@ -253,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private static String bytesToHex(byte[] hash) {
+    public static String bytesToHex(byte[] hash) {
         StringBuffer hexString = new StringBuffer();
         for (int i = 0; i < hash.length; i++) {
             String hex = Integer.toHexString(hash[i] & 0xff).toLowerCase();

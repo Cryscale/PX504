@@ -6,19 +6,14 @@
     <string name="activity_deconnexion">Deconnexion</string>
     <string name="loggin">Identifiant</string>
     <string name="pwd">Mot de passe</string>
-    <string name="location1">Ecrire 1</string>
-    <string name="location2">Ecrire 1</string>
-    <string name="location3">Ecrire 1</string>
-    <string name="location4">Ecrire 1</string>
-    <string name="location5">Ecrire 1</string>
     <string name="luminosite">Luminosité :</string>
     <string name="luminosite_min">1</string>
     <string name="luminosite_max">100</string>
     <string name="text">Phrase comprise</string>
-    <string name="debug_message_envoyé">Requette composée</string>
-    <string name="speech_prompt">Say something&#8230;</string>
-    <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
-    <string name="tap_on_mic">Tap on mic to speak</string>
+    <string name="debug_message_envoyé">Requête composée</string>
+    <string name="speech_prompt">Dites votre commande&#8230;</string>
+    <string name="speech_not_supported">Désolé votre appareil ne suporte pas la synthèse vocale</string>
+    <string name="tap_on_mic">Touchez le micro pour parler</string>
 
     <string-array
         name="action_word_on">

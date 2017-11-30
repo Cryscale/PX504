@@ -25,6 +25,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -83,7 +86,15 @@ public class LampControlIHM extends AppCompatActivity {
         list = new ArrayList<Lamp>();
         adapter = new LampAdapter(this, list);
         listView.setAdapter(adapter);
-        webSocketClient.getListLamp(user);
+        MessageDigest DMsg = null;
+        try {
+            DMsg = MessageDigest.getInstance("SHA-256");
+            String hashUser = MainActivity.bytesToHex(DMsg.digest(user.getBytes(StandardCharsets.UTF_8)));
+            webSocketClient.getListLamp(hashUser);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
 
 
 
