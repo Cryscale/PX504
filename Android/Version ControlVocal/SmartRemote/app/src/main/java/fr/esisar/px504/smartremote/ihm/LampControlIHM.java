@@ -269,7 +269,7 @@ public class LampControlIHM extends AppCompatActivity {
 
                     textInput.setText(result.get(0));
                     String text = "";
-                    List<Lamp> listLamp = vocalControl.SyntacticAnalysis(result);
+                    List<Lamp> listLamp = vocalControl.SyntacticAnalysis_version3(result);
 
                     for (Lamp lamp : listLamp) {
                         text = text + lamp.getLocation() + lamp.getState() + lamp.getbrightness();
